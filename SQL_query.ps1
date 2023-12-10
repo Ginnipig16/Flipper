@@ -13,7 +13,8 @@ $databaseName = "DB_TC-ICTAssets"
 $tableName = "BYOD-Assets"
 $columnName = "DeviceName"
 $serialNumberColumn = "Serial-Number" 
-
+$username = "TC-NET\administrator"
+$password = "1mp0rtant"
 
 # Read the serial number from the clipboard
 $serialNumber = Get-Clipboard
