@@ -23,7 +23,7 @@ $serialNumber = Get-Clipboard
 $query = "SELECT [$columnName] FROM [$tableName] WHERE [$serialNumberColumn] = '$serialNumber'"
 
 # Run the SQL query
-$results = Invoke-Sqlcmd -ServerInstance $serverName -Database $databaseName -Query $query -TrustServerCertificate
+$results = Invoke-Sqlcmd -ServerInstance $serverName -Database $databaseName -Query $query -TrustServerCertificate -Username $username -Password $password
 
 
 # Check if results were returned and act accordingly
