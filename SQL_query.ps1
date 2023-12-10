@@ -1,4 +1,4 @@
-﻿# Install the SQLServer module if it's not already installed
+ # Install the SQLServer module if it's not already installed
 if (-not (Get-Module -ListAvailable -Name SqlServer)) {
     Install-Module -Name SqlServer -Force
 }
@@ -13,8 +13,8 @@ $databaseName = "DB_TC-ICTAssets"
 $tableName = "BYOD-Assets"
 $columnName = "DeviceName"
 $serialNumberColumn = "Serial-Number" 
-$username = "TC-NET\administrator"
-$password = "1mp0rtant"
+$username = "ByodQuery"
+$password = "1mp0rtant."
 
 # Read the serial number from the clipboard
 $serialNumber = Get-Clipboard
@@ -36,4 +36,4 @@ if ($results) {
     notepad "deviceName.txt"
 } else {
     Write-Host "No matching device found."
-}
+} 
