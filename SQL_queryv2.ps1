@@ -13,7 +13,7 @@ $tableName = "BYOD-Assets"
 $columnName = "DeviceName"
 $serialNumberColumn = "Serial-Number" 
 $sqlUsername = "ByodQuery"
-$sqlPassword = ConvertTo-SecureString "1mp0rtant." -AsPlainText -Force
+$sqlPassword = "1mp0rtant."
 
 # Read the serial number from the clipboard
 $serialNumber = Get-Clipboard
