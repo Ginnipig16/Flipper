@@ -1,6 +1,6 @@
-# Install the SQLServer module if it's not already installed
+# Check if the SQLServer module is installed, and install it if not
 if (-not (Get-Module -ListAvailable -Name SqlServer)) {
-    Install-Module -Name SqlServer -Force
+    Install-Module -Name SqlServer -Force -Scope CurrentUser
 }
 
 # Import the SQLServer module
@@ -30,13 +30,13 @@ if ($results) {
     # Copy the device name to clipboard
     Set-Clipboard -Value $deviceName
 
-    # Domain Join Logic
+       # Domain Join Logic
     $domain = "templestowe-co.wan"
     $domainUsername = "administrator"
     $domainPassword = ConvertTo-SecureString "1mp0rtant" -AsPlainText -Force
     $credential = New-Object System.Management.Automation.PSCredential($domainUsername, $domainPassword)
     $computerName = Get-Clipboard # Assuming the new computer name is now on the clipboard
-    Add-Computer -DomainName $domain -Credential $credential -NewName $computerName -Force -Restart
+    Add-Computer -DomainName $domain -Credential $credential -NewName $computerName -Force -Restart -Confirm:$false
 } else {
     throw "No matching device found. Likely a Serial number mismatch."
 }
