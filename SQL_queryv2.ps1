@@ -30,13 +30,16 @@ if ($results) {
     # Copy the device name to clipboard
     Set-Clipboard -Value $deviceName
 
-       # Domain Join Logic
-    $domain = "templestowe-co.wan"
-    $domainUsername = "administrator"
-    $domainPassword = "1mp0rtant"
-    $credential = New-Object System.Management.Automation.PSCredential($domainUsername, $domainPassword)
-    $computerName = Get-Clipboard # Assuming the new computer name is now on the clipboard
-    Add-Computer -DomainName $domain -Credential $credential -NewName $computerName -Force -Restart -Confirm:$false
+   # Domain Join Logic
+$domain = "templestowe-co.wan"
+$domainUsername = "$domain\administrator" # Ensure the domain is included in the username
+$plaintextPassword = "1mp0rtant"
+$securePassword = ConvertTo-SecureString $plaintextPassword -AsPlainText -Force
+$credential = New-Object System.Management.Automation.PSCredential($domainUsername, $securePassword)
+
+$computerName = Get-Clipboard # Assuming the new computer name is now on the clipboard
+Add-Computer -DomainName $domain -Credential $credential -NewName $computerName -Force -Restart -Confirm:$false
+
 } else {
     throw "No matching device found. Likely a Serial number mismatch."
 }
