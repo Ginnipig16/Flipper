@@ -37,8 +37,8 @@ if ($results) {
     if ($currentComputerName -like "BYO-*") {
         # Domain Join Logic
         $domain = "templestowe-co.wan"
-        $domainUsername = "administrator@$domain" # Ensure the domain is included in the username
-        $plaintextPassword = "1mp0rtant"
+        $domainUsername = "dpet@$domain" # Ensure the domain is included in the username
+        $plaintextPassword = "TCdpet123!"
         $securePassword = ConvertTo-SecureString $plaintextPassword -AsPlainText -Force
         $credential = New-Object System.Management.Automation.PSCredential($domainUsername, $securePassword)
         
