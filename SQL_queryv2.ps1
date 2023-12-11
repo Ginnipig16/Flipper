@@ -33,15 +33,6 @@ if ($results) {
     # Get the current computer name
     $currentComputerName = $env:COMPUTERNAME
 
-   # Check if results were returned and act accordingly
-if ($results) {
-    $deviceName = $results.$columnName
-    # Copy the device name to clipboard
-    Set-Clipboard -Value $deviceName
-
-    # Get the current computer name
-    $currentComputerName = $env:COMPUTERNAME
-
     # Check if the current computer name starts with "BYO-"
     if ($currentComputerName -like "BYO-*") {
         # Domain Join Logic
