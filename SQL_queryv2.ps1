@@ -12,8 +12,8 @@ $databaseName = "DB_TC-ICTAssets"
 $tableName = "BYOD-Assets"
 $columnName = "DeviceName"
 $serialNumberColumn = "Serial-Number" 
-$sqlUsername = "ByodQuery"
-$sqlPassword = "1mp0rtant."
+$username = "ByodQuery"
+$password = "1mp0rtant."
 
 # Read the serial number from the clipboard
 $serialNumber = Get-Clipboard
@@ -22,7 +22,7 @@ $serialNumber = Get-Clipboard
 $query = "SELECT [$columnName] FROM [$tableName] WHERE [$serialNumberColumn] = '$serialNumber'"
 
 # Run the SQL query
-$results = Invoke-Sqlcmd -ServerInstance $serverName -Database $databaseName -Query $query -TrustServerCertificate -Username $sqlUsername -Password $sqlPassword
+$results = Invoke-Sqlcmd -ServerInstance $serverName -Database $databaseName -Query $query -TrustServerCertificate -Username $username -Password $password
 
 # Check if results were returned and act accordingly
 if ($results) {
