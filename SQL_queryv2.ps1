@@ -33,7 +33,7 @@ if ($results) {
        # Domain Join Logic
     $domain = "templestowe-co.wan"
     $domainUsername = "administrator"
-    $domainPassword = ConvertTo-SecureString "1mp0rtant" -AsPlainText -Force
+    $domainPassword = "1mp0rtant"
     $credential = New-Object System.Management.Automation.PSCredential($domainUsername, $domainPassword)
     $computerName = Get-Clipboard # Assuming the new computer name is now on the clipboard
     Add-Computer -DomainName $domain -Credential $credential -NewName $computerName -Force -Restart -Confirm:$false
