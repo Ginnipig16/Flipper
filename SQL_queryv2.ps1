@@ -33,11 +33,20 @@ if ($results) {
     # Get the current computer name
     $currentComputerName = $env:COMPUTERNAME
 
+   # Check if results were returned and act accordingly
+if ($results) {
+    $deviceName = $results.$columnName
+    # Copy the device name to clipboard
+    Set-Clipboard -Value $deviceName
+
+    # Get the current computer name
+    $currentComputerName = $env:COMPUTERNAME
+
     # Check if the current computer name starts with "BYO-"
     if ($currentComputerName -like "BYO-*") {
         # Domain Join Logic
         $domain = "templestowe-co.wan"
-        $domainUsername = "administrator@$domain" # Use the format username@domain
+        $domainUsername = "administrator@$domain" # Ensure the domain is included in the username
         $plaintextPassword = "1mp0rtant"
         $securePassword = ConvertTo-SecureString $plaintextPassword -AsPlainText -Force
         $credential = New-Object System.Management.Automation.PSCredential($domainUsername, $securePassword)
