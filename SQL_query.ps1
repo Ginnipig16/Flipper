@@ -32,8 +32,8 @@ if ($results) {
     # Copy the device name to clipboard
     Set-Clipboard -Value $deviceName
     # Alternatively, open the device name in Notepad
-    $deviceName | Out-File -FilePath "deviceName.txt"
-    notepad "deviceName.txt"
+    #$deviceName | Out-File -FilePath "deviceName.txt"
+    #notepad "deviceName.txt"
 } else {
     Write-Host "No matching device found."
 } 
