@@ -30,17 +30,24 @@ if ($results) {
     # Copy the device name to clipboard
     Set-Clipboard -Value $deviceName
 
-   # Domain Join Logic
-$domain = "templestowe-co.wan"
-$domainUsername = "administrator@$domain" # Use the format username@domain
-$plaintextPassword = "1mp0rtant"
-$securePassword = ConvertTo-SecureString $plaintextPassword -AsPlainText -Force
-$credential = New-Object System.Management.Automation.PSCredential($domainUsername, $securePassword)
+    # Get the current computer name
+    $currentComputerName = $env:COMPUTERNAME
 
-$computerName = Get-Clipboard # Assuming the new computer name is now on the clipboard
-Add-Computer -DomainName $domain -Credential $credential -NewName $computerName -Force -Restart -Confirm:$false
-
-
+    # Check if the current computer name starts with "BYO-"
+    if ($currentComputerName -like "BYO-*") {
+        # Domain Join Logic
+        $domain = "templestowe-co.wan"
+        $domainUsername = "administrator@$domain" # Use the format username@domain
+        $plaintextPassword = "1mp0rtant"
+        $securePassword = ConvertTo-SecureString $plaintextPassword -AsPlainText -Force
+        $credential = New-Object System.Management.Automation.PSCredential($domainUsername, $securePassword)
+        
+        # Assuming the new computer name is now on the clipboard
+        $computerName = Get-Clipboard 
+        Add-Computer -DomainName $domain -Credential $credential -NewName $computerName -Force -Restart -Confirm:$false
+    } else {
+        throw "The current computer name ($currentComputerName) does not start with 'BYO-'. Aborting domain join."
+    }
 } else {
     throw "No matching device found. Likely a Serial number mismatch."
 }
