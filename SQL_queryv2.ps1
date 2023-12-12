@@ -31,11 +31,9 @@ if ($results) {
     Set-Clipboard -Value $intendedComputerName
 
     # Rename the computer to the intended name
-    try {
-        Rename-Computer -NewName $intendedComputerName -Force -ErrorAction Stop
-    } catch {
-        throw "Failed to rename the computer to $intendedComputerName. Error: $_"
-    }
+   
+    Rename-Computer -NewName $intendedComputerName -Force -ErrorAction Stop
+    
 
     # Domain Join Logic
     $domain = "templestowe-co.wan"
