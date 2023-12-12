@@ -40,9 +40,9 @@ if ($results) {
     try {
         # Join the domain and rename the computer
         Add-Computer -DomainName $domain -Credential $credential -NewName $intendedComputerName -Force -Restart -Confirm:$false
-        Write-Host "The computer is now joined to the domain and will restart." -ForegroundColor Green
-        Write-Host "Starting sleep for 10 seconds, will attempt rename again after" -ForegroundColor Green
-        Start-Sleep -Seconds 10
+        Write-Host "Renaming likely failed, starting sleep for 15 seconds, will attempt rename again after" -ForegroundColor Green
+        Start-Sleep -Seconds 15
+        
         # Set the maximum number of rename attempts
         $maxAttempts = 5
         $attemptCount = 0
@@ -57,7 +57,7 @@ if ($results) {
                 break # Exit the loop if rename is successful
             } catch {
                 Write-Error "Attempt $attemptCount: Failed to rename the computer. Error: $_"
-                Start-Sleep -Seconds 30 # Wait for 30 seconds before trying again
+                Start-Sleep -Seconds 5 # Wait for 5 seconds before trying again
                 $attemptCount++
             }
         }
