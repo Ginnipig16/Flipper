@@ -43,7 +43,7 @@ if ($results) {
     $credential = New-Object System.Management.Automation.PSCredential($domainUsername, $securePassword)
 
     # Join the domain with the new name
-    Rename-Computer -NewName $intendedComputerName -Force -Credential $credential -ErrorAction Stop
+    Rename-Computer -NewName $intendedComputerName -Credential $credential -Force -ErrorAction Stop
     Add-Computer -DomainName $domain -Credential $credential -Force -ErrorAction Stop
     
 
