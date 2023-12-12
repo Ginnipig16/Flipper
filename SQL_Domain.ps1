@@ -2,6 +2,20 @@
 if (-not (Get-Module -ListAvailable -Name SqlServer)) {
     Install-Module -Name SqlServer -Force -Scope CurrentUser
 }
+# Check if the ActiveDirectory module is available
+if (-not (Get-Module -ListAvailable -Name ActiveDirectory)) {
+    # Install the RSAT tools including the ActiveDirectory module (Windows 10 version 1809 and newer)
+    try {
+        # This requires administrative privileges
+        Add-WindowsCapability -Online -Name "Rsat.ActiveDirectory.DS-LDS.Tools~~~~0.0.1.0" -ErrorAction Stop
+        Write-Host "Active Directory module installed successfully." -ForegroundColor Green
+    } catch {
+        throw "Failed to install the Active Directory module. Error: $_"
+    }
+}
+
+# Import the ActiveDirectory module
+Import-Module ActiveDirectory
 
 # Import the SQLServer module
 Import-Module -Name SqlServer
