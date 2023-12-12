@@ -39,11 +39,42 @@ if ($results) {
 
     try {
         # Join the domain and rename the computer
-        Add-Computer -DomainName $domain -Credential $credential -NewName $intendedComputerName -Force -Confirm:$false
+        Add-Computer -DomainName $domain -Credential $credential -NewName $intendedComputerName -Force -Restart -Confirm:$false
         Write-Host "The computer is now joined to the domain and will restart." -ForegroundColor Green
         Write-Host "Starting sleep for 10 seconds, will attempt rename again after" -ForegroundColor Green
         Start-Sleep -Seconds 10
-        Rename-Computer -NewName $intendedComputerName -Force -ErrorAction Stop
+        # Set the maximum number of rename attempts
+        $maxAttempts = 5
+        $attemptCount = 0
+        $success = $false
+        
+        # Get the intended computer name from your previous code
+        $intendedComputerName = "YOUR_NEW_COMPUTER_NAME" # Replace with actual intended name
+        
+        # Loop until the computer name is changed or the maximum number of attempts is reached
+        while (($env:COMPUTERNAME -ne $intendedComputerName) -and ($attemptCount -lt $maxAttempts)) {
+            try {
+                # Attempt to rename the computer
+                Rename-Computer -NewName $intendedComputerName -Force -ErrorAction Stop
+                $success = $true
+                break # Exit the loop if rename is successful
+            } catch {
+                Write-Error "Attempt $attemptCount: Failed to rename the computer. Error: $_"
+                Start-Sleep -Seconds 30 # Wait for 30 seconds before trying again
+                $attemptCount++
+            }
+        }
+        
+        if ($success) {
+            # If rename was successful, restart the computer
+            Write-Host "The computer name has been changed to $intendedComputerName. Restarting..."
+            Restart-Computer -Force
+        } else {
+            Write-Host "Failed to rename the computer after $maxAttempts attempts."
+        }
+
+
+        
     } catch {
         throw "Failed to join the domain and/or rename the computer. Error: $_"
     }
