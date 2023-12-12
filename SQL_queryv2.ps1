@@ -44,7 +44,8 @@ if ($results) {
 
     # Join the domain with the new name
     Rename-Computer -NewName $intendedComputerName -Force -ErrorAction Stop
-    Add-Computer -DomainName $domain -Credential $credential -Force -ErrorAction Stop
+    Write-Host "Please wait a moment while we join the domain" -ForegroundColor Green
+    Add-Computer -DomainName $domain -Options JoinWithNewName -Credential $credential -Force -ErrorAction Stop
     
 
     # Restart the computer
