@@ -30,6 +30,7 @@ if ($results) {
     $intendedComputerName = $results.$columnName
 
     # Domain Join Logic
+    $DC = "tc-dc01.templestowe-co.wan"
     $domain = "templestowe-co.wan"
     $domainUsername = "administrator"  # Use just the username here, not UPN format
     $domainFullUsername = "$domainUsername@$domain"  # Construct the full domain\username
@@ -39,7 +40,7 @@ if ($results) {
 
     try {
         # Join the domain and rename the computer
-        Add-Computer -DomainName $domain -Credential $credential -NewName $intendedComputerName -Force -Restart -Confirm:$false
+        Add-Computer -DomainName $domain -Credential $credential -Server $DC -NewName $intendedComputerName -Force -Restart -Confirm:$false
         Write-Host "Renaming likely failed, starting sleep for 15 seconds, will attempt rename again after" -ForegroundColor Green
         Start-Sleep -Seconds 15
         
