@@ -56,7 +56,7 @@ if ($results) {
                 $success = $true
                 break # Exit the loop if rename is successful
             } catch {
-                Write-Error "Attempt $attemptCount: Failed to rename the computer. Error: $_"
+                Write-Error "Attempt $attemptCount : Failed to rename the computer. Error: $_"
                 Start-Sleep -Seconds 5 # Wait for 5 seconds before trying again
                 $attemptCount++
             }
