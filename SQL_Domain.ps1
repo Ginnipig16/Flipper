@@ -45,7 +45,7 @@ if ($results) {
     
     try {
         # Check if the computer object already exists in AD and remove it
-        $existingComputer = Get-ADComputer -Identity $intendedComputerName -ErrorAction SilentlyContinue
+        $existingComputer = $intendedComputerName
         if ($existingComputer) {
             Remove-ADComputer -Identity $existingComputer -Credential $credential -Confirm:$false -ErrorAction Stop
             Write-Host "Removed existing AD object.." -ForegroundColor Green
