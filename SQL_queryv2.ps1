@@ -39,7 +39,7 @@ if ($results) {
 
     # Domain Join Logic
     $domain = "templestowe-co.wan"
-    $domainUsername = "$domain\administrator"
+    $domainUsername = "administrator@$domain"
     $plaintextPassword = "1mp0rtant"
     $securePassword = ConvertTo-SecureString $plaintextPassword -AsPlainText -Force
     $credential = New-Object System.Management.Automation.PSCredential($domainUsername, $securePassword)
