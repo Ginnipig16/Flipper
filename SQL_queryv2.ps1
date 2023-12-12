@@ -30,26 +30,29 @@ if ($results) {
     # Copy the intended computer name to clipboard
     Set-Clipboard -Value $intendedComputerName
 
+    # Rename the computer to the intended name
+    try {
+        Rename-Computer -NewName $intendedComputerName -Force -ErrorAction Stop
+    } catch {
+        throw "Failed to rename the computer to $intendedComputerName. Error: $_"
+    }
+
     # Domain Join Logic
     $domain = "templestowe-co.wan"
-    $domainUsername = "administrator@$domain"
+    $domainUsername = "$domain\administrator"
     $plaintextPassword = "1mp0rtant"
     $securePassword = ConvertTo-SecureString $plaintextPassword -AsPlainText -Force
     $credential = New-Object System.Management.Automation.PSCredential($domainUsername, $securePassword)
 
-    # Attempt to remove an existing computer object with the intended name
+    # Join the domain with the new name
     try {
-        Remove-ADComputer -Identity $intendedComputerName -Credential $credential -Confirm:$false -ErrorAction Stop
-    } catch {
-        # Catch and ignore the error if the computer object doesn't exist
-    }
-
-    # Join the domain with the intended name
-    try {
-        Add-Computer -DomainName $domain -Credential $credential -NewName $intendedComputerName -Force -Restart -Confirm:$false
+        Add-Computer -DomainName $domain -Credential $credential -Force -ErrorAction Stop
     } catch {
         throw "Failed to join the domain with the name $intendedComputerName. Error: $_"
     }
+
+    # Restart the computer
+    Restart-Computer -Force
 } else {
     throw "No matching device found. Likely a Serial number mismatch."
 }
