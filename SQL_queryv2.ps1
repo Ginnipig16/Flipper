@@ -25,31 +25,25 @@ $query = "SELECT [$columnName] FROM [$tableName] WHERE [$serialNumberColumn] = '
 $results = Invoke-Sqlcmd -ServerInstance $serverName -Database $databaseName -Query $query -TrustServerCertificate -Username $username -Password $password
 
 # Check if results were returned and act accordingly
+# Check if results were returned and act accordingly
 if ($results) {
     $intendedComputerName = $results.$columnName
-    # Copy the intended computer name to clipboard
-    Set-Clipboard -Value $intendedComputerName
-
-    # Rename the computer to the intended name
-   
-    
-    
 
     # Domain Join Logic
     $domain = "templestowe-co.wan"
-    $domainUsername = "administrator@$domain"
+    $domainUsername = "administrator"  # Use just the username here, not UPN format
+    $domainFullUsername = "$domainUsername@$domain"  # Construct the full domain\username
     $plaintextPassword = "1mp0rtant"
     $securePassword = ConvertTo-SecureString $plaintextPassword -AsPlainText -Force
-    $credential = New-Object System.Management.Automation.PSCredential($domainUsername, $securePassword)
+    $credential = New-Object System.Management.Automation.PSCredential($domainFullUsername, $securePassword)
 
-    # Join the domain with the new name
-    Rename-Computer -NewName $intendedComputerName -Force -ErrorAction Stop
-    Write-Host "Please wait a moment while we join the domain" -ForegroundColor Green
-    Add-Computer -DomainName $domain -Options JoinWithNewName -Credential $credential -Force -ErrorAction Stop
-    
-
-    # Restart the computer
-    Restart-Computer -Force
+    try {
+        # Join the domain and rename the computer
+        Add-Computer -DomainName $domain -Credential $credential -NewName $intendedComputerName -Force -Restart -Confirm:$false
+        Write-Host "The computer is now joined to the domain and will restart." -ForegroundColor Green
+    } catch {
+        throw "Failed to join the domain and/or rename the computer. Error: $_"
+    }
 } else {
     throw "No matching device found. Likely a Serial number mismatch."
 }
