@@ -48,9 +48,6 @@ if ($results) {
         $attemptCount = 0
         $success = $false
         
-        # Get the intended computer name from your previous code
-        $intendedComputerName = "YOUR_NEW_COMPUTER_NAME" # Replace with actual intended name
-        
         # Loop until the computer name is changed or the maximum number of attempts is reached
         while (($env:COMPUTERNAME -ne $intendedComputerName) -and ($attemptCount -lt $maxAttempts)) {
             try {
