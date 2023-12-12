@@ -41,6 +41,7 @@ if ($results) {
         # Join the domain and rename the computer
         Add-Computer -DomainName $domain -Credential $credential -NewName $intendedComputerName -Force -Restart -Confirm:$false
         Write-Host "The computer is now joined to the domain and will restart." -ForegroundColor Green
+        Write-Host "Starting sleep for 10 seconds, will attempt rename again after" -ForegroundColor Green
         Start-Sleep -Seconds 10
         Rename-Computer -NewName $intendedComputerName -Force -ErrorAction Stop
     } catch {
