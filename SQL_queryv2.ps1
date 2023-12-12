@@ -26,27 +26,29 @@ $results = Invoke-Sqlcmd -ServerInstance $serverName -Database $databaseName -Qu
 
 # Check if results were returned and act accordingly
 if ($results) {
-    $deviceName = $results.$columnName
-    # Copy the device name to clipboard
-    Set-Clipboard -Value $deviceName
+    $intendedComputerName = $results.$columnName
+    # Copy the intended computer name to clipboard
+    Set-Clipboard -Value $intendedComputerName
 
-    # Get the current computer name
-    $currentComputerName = $env:COMPUTERNAME
+    # Domain Join Logic
+    $domain = "templestowe-co.wan"
+    $domainUsername = "administrator@$domain"
+    $plaintextPassword = "1mp0rtant"
+    $securePassword = ConvertTo-SecureString $plaintextPassword -AsPlainText -Force
+    $credential = New-Object System.Management.Automation.PSCredential($domainUsername, $securePassword)
 
-    # Check if the current computer name starts with "BYO-"
-    if ($currentComputerName -like "BYO-*") {
-        # Domain Join Logic
-        $domain = "templestowe-co.wan"
-        $domainUsername = "dpet@$domain" # Ensure the domain is included in the username
-        $plaintextPassword = "TCdpet123!"
-        $securePassword = ConvertTo-SecureString $plaintextPassword -AsPlainText -Force
-        $credential = New-Object System.Management.Automation.PSCredential($domainUsername, $securePassword)
-        
-        # Assuming the new computer name is now on the clipboard
-        $computerName = Get-Clipboard 
-        Add-Computer -DomainName $domain -Credential $credential -NewName $computerName -Force -Restart -Confirm:$false
-    } else {
-        throw "The current computer name ($currentComputerName) does not start with 'BYO-'. Aborting domain join."
+    # Remove the existing computer object with the same name, if it exists
+    try {
+        Remove-ADComputer -Identity $intendedComputerName -Credential $credential -Confirm:$false -ErrorAction Stop
+    } catch {
+        # Ignoring errors that occur if the computer object doesn't exist
+    }
+
+    # Attempt to join the domain with the intended name
+    try {
+        Add-Computer -DomainName $domain -Credential $credential -NewName $intendedComputerName -Force -Restart -Confirm:$false
+    } catch {
+        throw "Failed to join the domain with the name $intendedComputerName. Error: $_"
     }
 } else {
     throw "No matching device found. Likely a Serial number mismatch."
