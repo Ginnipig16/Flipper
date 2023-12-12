@@ -43,11 +43,9 @@ if ($results) {
     $credential = New-Object System.Management.Automation.PSCredential($domainUsername, $securePassword)
 
     # Join the domain with the new name
-    try {
-        Add-Computer -DomainName $domain -Credential $credential -Force -ErrorAction Stop
-    } catch {
-        throw "Failed to join the domain with the name $intendedComputerName. Error: $_"
-    }
+    
+    Add-Computer -DomainName $domain -Credential $credential -Force -ErrorAction Stop
+    
 
     # Restart the computer
     Restart-Computer -Force
