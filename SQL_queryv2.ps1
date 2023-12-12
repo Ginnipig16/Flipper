@@ -39,9 +39,10 @@ if ($results) {
 
     # Remove the existing computer object with the same name, if it exists
     try {
-        Remove-ADComputer -Identity $intendedComputerName -Credential $credential -Confirm:$false -ErrorAction Stop
+        $existingComputer = Get-ADComputer -Identity $intendedComputerName -ErrorAction Stop
+        Remove-ADComputer -Identity $existingComputer -Credential $credential -Confirm:$false
     } catch {
-        # Ignoring errors that occur if the computer object doesn't exist
+        # Error action if the computer object doesn't exist
     }
 
     # Attempt to join the domain with the intended name
