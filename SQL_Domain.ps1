@@ -38,45 +38,32 @@ if ($results) {
     $securePassword = ConvertTo-SecureString $plaintextPassword -AsPlainText -Force
     $credential = New-Object System.Management.Automation.PSCredential($domainFullUsername, $securePassword)
 
+    # Define the OU path where the computer object should be placed
+    # Note: You need to provide the distinguished name (DN) of the OU.
+    $ouPath = "OU=Student BYOD,OU=BYO Primary Devices,OU=ALL TC COMPUTERS,DC=templestowe-co,DC=wan"
+    $groupName = "All BYO Devices"
+    
     try {
-        # Join the domain and rename the computer
-        # Rename the computer and join the domain
-        $netdomCommand = "netdom renamecomputer $env:COMPUTERNAME /newname:$intendedComputerName /userd:$domainUser /passwordd:$plaintextPassword /force"
-        Invoke-Expression $netdomCommand
-        Write-Host "Renaming likely failed, starting sleep for 15 seconds, will attempt rename again after" -ForegroundColor Green
-        Start-Sleep -Seconds 15
-        
-        # Set the maximum number of rename attempts
-        $maxAttempts = 5
-        $attemptCount = 0
-        $success = $false
-        
-        # Loop until the computer name is changed or the maximum number of attempts is reached
-        while (($env:COMPUTERNAME -ne $intendedComputerName) -and ($attemptCount -lt $maxAttempts)) {
-            try {
-                # Attempt to rename the computer
-                Rename-Computer -NewName $intendedComputerName -Force -ErrorAction Stop
-                $success = $true
-                break # Exit the loop if rename is successful
-            } catch {
-                Write-Error "Attempt $attemptCount : Failed to rename the computer. Error: $_"
-                Start-Sleep -Seconds 5 # Wait for 5 seconds before trying again
-                $attemptCount++
-            }
+        # Check if the computer object already exists in AD and remove it
+        $existingComputer = Get-ADComputer -Identity $intendedComputerName -ErrorAction SilentlyContinue
+        if ($existingComputer) {
+            Remove-ADComputer -Identity $existingComputer -Credential $credential -Confirm:$false -ErrorAction Stop
+            Write-Host "Removed existing AD object.." -ForegroundColor Green
         }
+        Write-Host "Attempting to Add computer..." -ForegroundColor Green
+        Add-Computer -DomainName $domain -Credential $credential -OUPath $ouPath -NewName $intendedComputerName -Force -Confirm:$false -ErrorAction Stop
+        # The computer object should now exist in AD, so we can try to add it to the group.
         
-        if ($success) {
-            # If rename was successful, restart the computer
-            Write-Host "The computer name has been changed to $intendedComputerName. Restarting..."
-            Restart-Computer -Force
-        } else {
-            Write-Host "Failed to rename the computer after $maxAttempts attempts."
-        }
-
-
+        # Define the group's distinguished name (DN)
+        $groupDN = "CN=All BYO Devices,OU=Groups,DC=templestowe-co,DC=wan"
         
+        # Add the computer to the AD group
+        Add-ADGroupMember -Identity $groupDN -Members "$intendedComputerName`$" -Credential $credential -ErrorAction Stop
+        
+        # Restart the computer to apply changes
+        Restart-Computer -Force
     } catch {
-        throw "Failed to join the domain and/or rename the computer. Error: $_"
+        throw "Failed to reset the AD object, join the domain, and/or rename the computer. Error: $_"
     }
 } else {
     throw "No matching device found. Likely a Serial number mismatch."
