@@ -44,11 +44,11 @@ if ($results) {
 
     # Join the domain with the new name
     Rename-Computer -NewName $intendedComputerName -Force -ErrorAction Stop
-    #Add-Computer -DomainName $domain -Credential $credential -Force -ErrorAction Stop
+    Add-Computer -DomainName $domain -Credential $credential -Force -ErrorAction Stop
     
 
     # Restart the computer
-    #Restart-Computer -Force
+    Restart-Computer -Force
 } else {
     throw "No matching device found. Likely a Serial number mismatch."
 }
