@@ -57,28 +57,28 @@ if ($results) {
     $ouPath = "OU=Student BYOD,OU=BYO Primary Devices,OU=ALL TC COMPUTERS,DC=templestowe-co,DC=wan"
     $groupName = "All BYO Devices"
     
-    try {
-        # Check if the computer object already exists in AD and remove it
-        $existingComputer = $intendedComputerName
-        if ($existingComputer) {
-            Remove-ADComputer -Identity $existingComputer -Credential $credential -Confirm:$false -ErrorAction Stop
-            Write-Host "Removed existing AD object.." -ForegroundColor Green
+        try {
+            # Check if the computer object already exists in AD
+            $existingComputer = Get-ADComputer -Filter "Name -eq '$intendedComputerName'" -ErrorAction SilentlyContinue
+            if ($existingComputer) {
+                # If it exists, remove it
+                Remove-ADComputer -Identity $existingComputer.DistinguishedName -Credential $credential -Confirm:$false -ErrorAction Stop
+                Write-Host "Removed existing AD object with name $intendedComputerName." -ForegroundColor Green
+            }
+        
+            # Proceed to add the computer to the domain and OU
+            Add-Computer -DomainName $domain -Credential $credential -OUPath $ouPath -NewName $intendedComputerName -Force -Confirm:$false -ErrorAction Stop
+            Write-Host "Computer $intendedComputerName has been added to the domain $domain and placed in OU $ouPath." -ForegroundColor Green
+        
+            # Add the computer to the AD group
+            Add-ADGroupMember -Identity $groupName -Members "$intendedComputerName`$" -Credential $credential -ErrorAction Stop
+            Write-Host "Computer $intendedComputerName has been added to the group $groupName." -ForegroundColor Green
+        
+            # Restart the computer to apply changes
+            Restart-Computer -Force
+        } catch {
+            throw "Failed to process AD operations. Error: $_"
         }
-        Write-Host "Attempting to Add computer..." -ForegroundColor Green
-        Add-Computer -DomainName $domain -Credential $credential -OUPath $ouPath -NewName $intendedComputerName -Force -Confirm:$false -ErrorAction Stop
-        # The computer object should now exist in AD, so we can try to add it to the group.
-        
-        # Define the group's distinguished name (DN)
-        $groupDN = "CN=All BYO Devices,OU=Groups,DC=templestowe-co,DC=wan"
-        
-        # Add the computer to the AD group
-        Add-ADGroupMember -Identity $groupDN -Members "$intendedComputerName`$" -Credential $credential -ErrorAction Stop
-        
-        # Restart the computer to apply changes
-        Restart-Computer -Force
-    } catch {
-        throw "Failed to reset the AD object, join the domain, and/or rename the computer. Error: $_"
-    }
 } else {
     throw "No matching device found. Likely a Serial number mismatch."
 }
